@@ -24,6 +24,10 @@ impl Default for Database {
 }
 
 impl Database {
+    pub fn clear(&self) -> Result<usize> {
+        self.conn.execute("delete from entries", [])
+    }
+
     pub fn select<T: FromSql>(&self) -> Result<Vec<T>> {
         let mut stmt = self.conn.prepare("select * from entries")?;
         let rows = stmt.query_map([], T::from_sql)?;
@@ -51,18 +55,25 @@ impl Database {
         let sql = format!("replace into entries ({keys}) values ({values})");
         self.execute(&sql, params)
     }
+}
 
-    fn execute(&self, sql: &str, params: Vec<ToSqlOutput>) -> Result<usize> {
-        macro_rules! match_params {
-            ($($len: literal),*) => {
+// Connection::execute doesnt accept dynamic sized params
+macro_rules! impl_execute {
+    ($($len: literal),*) => {
+        impl Database {
+            fn execute(&self, sql: &str, params: Vec<ToSqlOutput>) -> Result<usize> {
                 match params.len() {
+                    0 => self.conn.execute(sql, []),
                     $(
                         $len => self.conn.execute(sql, TryInto::<[ToSqlOutput; $len]>::try_into(params).unwrap()),
                     )*
-                    _ => std::unimplemented!(),
+                    _ => unimplemented!(),
                 }
-            };
+            }
         }
-        match_params!(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
-    }
+    };
 }
+impl_execute!(
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
+    27, 28, 29, 30, 31, 32
+);
