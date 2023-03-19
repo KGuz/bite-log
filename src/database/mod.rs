@@ -19,25 +19,24 @@ mod tests {
         sql_query(UP).execute(&mut conn)?;
 
         insert(&mut conn, "title", "description")?;
-        show(&mut conn)?;
+        insert(&mut conn, "title", "description")?;
+        insert(&mut conn, "title", "description")?;
+        update(&mut conn, 2);
+        delete(&mut conn, 1);
+        read(&mut conn)?;
 
         sql_query(DOWN).execute(&mut conn)?;
         Ok(())
     }
 
-    fn show(conn: &mut SqliteConnection) -> Result<()> {
+    fn read(conn: &mut SqliteConnection) -> Result<()> {
         use schema::posts::dsl::*;
 
-        let results = posts
-            .filter(published.eq(false))
-            .limit(5)
-            .load::<Post>(conn)?;
+        let results = posts.load::<Post>(conn)?;
 
         println!("Displaying {} posts", results.len());
         for post in results {
-            println!("{}", post.title);
-            println!("-----------");
-            println!("{}", post.body);
+            println!("{:?}", post);
         }
         Ok(())
     }
@@ -49,6 +48,22 @@ mod tests {
         diesel::insert_into(posts::table)
             .values(&new_post)
             .execute(conn)?;
+        Ok(())
+    }
+
+    fn update(conn: &mut SqliteConnection, post_id: i32) -> Result<()> {
+        use schema::posts::{self, dsl::*};
+
+        diesel::update(posts.filter(id.eq(post_id)))
+            .set(published.eq(true))
+            .execute(conn)?;
+        Ok(())
+    }
+
+    fn delete(conn: &mut SqliteConnection, post_id: i32) -> Result<()> {
+        use schema::posts::{self, dsl::*};
+
+        diesel::delete(posts.filter(id.eq(post_id))).execute(conn)?;
         Ok(())
     }
 }
