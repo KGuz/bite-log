@@ -1,4 +1,4 @@
-use crate::traits::{FromSql, ToSql};
+use super::traits::{FromSql, ToSql};
 use rusqlite::{types::ToSqlOutput, Connection, Result};
 
 pub struct Database {
@@ -10,7 +10,9 @@ impl From<&'static str> for Database {
         let conn = Connection::open(path).expect("connection should not fail");
         let sql = "create table if not exists entries (
             id integer primary key,
-            data text not null
+            date text,
+            time text null,
+            snack text
         )";
         conn.execute(sql, []).unwrap();
         Database { conn }
@@ -55,25 +57,39 @@ impl Database {
         let sql = format!("replace into entries ({keys}) values ({values})");
         self.execute(&sql, params)
     }
-}
 
-// Connection::execute doesnt accept dynamic sized params
-macro_rules! impl_execute {
-    ($($len: literal),*) => {
-        impl Database {
-            fn execute(&self, sql: &str, params: Vec<ToSqlOutput>) -> Result<usize> {
-                match params.len() {
-                    0 => self.conn.execute(sql, []),
-                    $(
-                        $len => self.conn.execute(sql, TryInto::<[ToSqlOutput; $len]>::try_into(params).unwrap()),
-                    )*
-                    _ => unimplemented!(),
-                }
-            }
+    // Connection::execute doesnt accept dynamic sized params
+    fn execute(&self, sql: &str, params: Vec<ToSqlOutput>) -> Result<usize> {
+        match params.len() {
+            0 => self.conn.execute(sql, []),
+            1 => self
+                .conn
+                .execute(sql, TryInto::<[ToSqlOutput; 1]>::try_into(params).unwrap()),
+            2 => self
+                .conn
+                .execute(sql, TryInto::<[ToSqlOutput; 2]>::try_into(params).unwrap()),
+            3 => self
+                .conn
+                .execute(sql, TryInto::<[ToSqlOutput; 3]>::try_into(params).unwrap()),
+            4 => self
+                .conn
+                .execute(sql, TryInto::<[ToSqlOutput; 4]>::try_into(params).unwrap()),
+            5 => self
+                .conn
+                .execute(sql, TryInto::<[ToSqlOutput; 5]>::try_into(params).unwrap()),
+            6 => self
+                .conn
+                .execute(sql, TryInto::<[ToSqlOutput; 6]>::try_into(params).unwrap()),
+            7 => self
+                .conn
+                .execute(sql, TryInto::<[ToSqlOutput; 7]>::try_into(params).unwrap()),
+            8 => self
+                .conn
+                .execute(sql, TryInto::<[ToSqlOutput; 8]>::try_into(params).unwrap()),
+            9 => self
+                .conn
+                .execute(sql, TryInto::<[ToSqlOutput; 9]>::try_into(params).unwrap()),
+            _ => panic!("Too many parameters"),
         }
-    };
+    }
 }
-impl_execute!(
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
-    27, 28, 29, 30, 31, 32
-);

@@ -7,4 +7,5 @@ edition = "2021"
 opt-level = 3
 
 [dependencies]
-rusqlite = { version = "0.28.0", features = ["bundled"] }
+chrono = "0.4.24"
+rusqlite = { version = "0.28.0", features = ["bundled", "chrono"] }
