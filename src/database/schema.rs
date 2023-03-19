@@ -1,6 +1,4 @@
-use diesel::table;
-
-table! {
+diesel::table! {
     posts (id) {
         id -> Integer,
         title -> Text,

@@ -8,35 +8,47 @@ mod tests {
     use anyhow::Result;
     use chrono::{Local, NaiveDate};
     use diesel::{prelude::*, sql_query};
+    use models::*;
+
+    const UP: &str = include_str!("sql/up.sql");
+    const DOWN: &str = include_str!("sql/down.sql");
 
     #[test]
     fn playground() -> Result<()> {
         let mut conn = SqliteConnection::establish("assets/test.db").unwrap();
-        let setup = include_str!("sql/up.sql");
-        sql_query(setup).execute(&mut conn)?;
+        sql_query(UP).execute(&mut conn)?;
 
-        show(&mut conn);
+        insert(&mut conn, "title", "description")?;
+        show(&mut conn)?;
 
-        let drop = include_str!("sql/down.sql");
-        sql_query(drop).execute(&mut conn)?;
+        sql_query(DOWN).execute(&mut conn)?;
         Ok(())
     }
 
     fn show(conn: &mut SqliteConnection) -> Result<()> {
-        use {models::*, schema::posts::dsl::*};
+        use schema::posts::dsl::*;
 
         let results = posts
-            .filter(published.eq(true))
+            .filter(published.eq(false))
             .limit(5)
-            .load::<Post>(conn)
-            .expect("Error loading posts");
+            .load::<Post>(conn)?;
 
         println!("Displaying {} posts", results.len());
         for post in results {
             println!("{}", post.title);
-            println!("-----------\n");
+            println!("-----------");
             println!("{}", post.body);
         }
+        Ok(())
+    }
+
+    fn insert(conn: &mut SqliteConnection, title: &str, body: &str) -> Result<()> {
+        use schema::posts;
+
+        let new_post = NewPost { title, body };
+        diesel::insert_into(posts::table)
+            .values(&new_post)
+            .execute(conn)?;
         Ok(())
     }
 }
