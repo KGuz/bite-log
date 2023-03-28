@@ -1,8 +1,11 @@
 diesel::table! {
-    posts (id) {
+    bites (id) {
         id -> Integer,
-        title -> Text,
-        body -> Text,
-        published -> Bool,
+        name -> Text,
+        calories -> Integer,
+        category -> Nullable<Integer>,
+        nutritions -> Nullable<Integer>,
+        date -> Date,
+        time -> Time,
     }
 }
