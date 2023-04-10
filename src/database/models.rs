@@ -117,7 +117,7 @@ impl TryFrom<i32> for Category {
             4 => Ok(Category::Lunch),
             5 => Ok(Category::Supper),
             6 => Ok(Category::Dinner),
-            x => Err(format!("Unrecognized variant {}", x).into()),
+            x => Err(format!("Unrecognized variant {}", x)),
         }
     }
 }
@@ -172,7 +172,7 @@ impl TryFrom<i32> for ActivityLevel {
             2 => Ok(ActivityLevel::LightlyActive),
             3 => Ok(ActivityLevel::ModeratelyActive),
             4 => Ok(ActivityLevel::VeryActive),
-            x => Err(format!("Unrecognized variant {}", x).into()),
+            x => Err(format!("Unrecognized variant {}", x)),
         }
     }
 }
