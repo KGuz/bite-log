@@ -54,7 +54,8 @@ mod tests {
         use schema::bites::{self, dsl::*};
 
         diesel::update(bites.filter(id.eq(bite_id)))
-            .set(calories.eq(1))
+            // .set(calories.eq(1))
+            .set(category.eq(Category::Breakfast))
             .execute(conn)?;
         Ok(())
     }

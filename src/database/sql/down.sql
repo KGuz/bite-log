@@ -1,1 +1,2 @@
-DROP TABLE bites
+DROP TABLE bites;
+DROP TABLE profiles;

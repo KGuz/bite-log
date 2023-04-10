@@ -3,7 +3,15 @@ CREATE TABLE bites (
     name TEXT NOT NULL,
     calories INTEGER NOT NULL,
     category INTEGER DEFAULT NULL,
-    nutritions INTEGER DEFAULT NULL,
+    nutritions BLOB DEFAULT NULL,
     date TEXT NOT NULL,
     time TEXT NOT NULL
+);
+
+CREATE TABLE profiles (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    height INTEGER NOT NULL,
+    weight INTEGER NOT NULL,
+    activity INTEGER NOT NULL,
 )
