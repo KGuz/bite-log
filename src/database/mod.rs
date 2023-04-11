@@ -13,14 +13,31 @@ mod tests {
     const UP: &str = include_str!("sql/up.sql");
     const DOWN: &str = include_str!("sql/down.sql");
 
+    fn chocolate() -> NewBite<'static> {
+        let now = Local::now();
+        NewBite {
+            name: "Chocolate",
+            calories: 207,
+            category: Some(Category::Snack),
+            nutritions: Some(Nutritions {
+                fats: 14.,
+                carbohydrates: 24.4,
+                fibers: 2.3,
+                proteins: 1.6,
+            }),
+            date: now.date_naive(),
+            time: now.time(),
+        }
+    }
+
     #[test]
     fn playground() -> Result<()> {
         let mut conn = SqliteConnection::establish("assets/test.db").unwrap();
         sql_query(UP).execute(&mut conn)?;
 
-        insert(&mut conn, NewBite::default())?;
-        insert(&mut conn, NewBite::default())?;
-        insert(&mut conn, NewBite::default())?;
+        insert(&mut conn, chocolate())?;
+        insert(&mut conn, chocolate())?;
+        insert(&mut conn, chocolate())?;
         update(&mut conn, 2);
         delete(&mut conn, 1);
         read(&mut conn)?;
@@ -35,8 +52,8 @@ mod tests {
         let results = bites.load::<Bite>(conn)?;
 
         println!("Displaying {} bites", results.len());
-        for post in results {
-            println!("{:?}", post);
+        for bite in results {
+            println!("{:?}", bite);
         }
         Ok(())
     }

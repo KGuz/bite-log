@@ -14,4 +14,4 @@ CREATE TABLE profiles (
     height INTEGER NOT NULL,
     weight INTEGER NOT NULL,
     activity INTEGER NOT NULL,
-)
+);
