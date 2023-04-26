@@ -1,4 +1,4 @@
-CREATE TABLE bites (
+CREATE TABLE IF NOT EXISTS bites (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     calories INTEGER NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE bites (
     time TEXT NOT NULL
 );
 
-CREATE TABLE profiles (
+CREATE TABLE IF NOT EXISTS profiles (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     height INTEGER NOT NULL,

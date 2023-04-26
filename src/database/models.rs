@@ -91,22 +91,23 @@ pub use bite::*;
 
 pub mod profile {
     use super::*;
-    #[derive(Queryable, Selectable, Debug, Clone, PartialEq, Eq)]
+
+    #[derive(Queryable, Selectable, Debug, Clone)]
     pub struct Profile {
         pub id: i32,
         pub name: String,
         pub height: i32,
         pub weight: i32,
-        pub activity: ActivityLevel,
+        pub activity: Option<ActivityLevel>,
     }
 
-    #[derive(Insertable, Debug, Clone, Copy, PartialEq, Eq)]
+    #[derive(Insertable, Debug, Clone)]
     #[diesel(table_name = profiles)]
     pub struct NewProfile<'a> {
         pub name: &'a str,
         pub height: i32,
         pub weight: i32,
-        pub activity: ActivityLevel,
+        pub activity: Option<ActivityLevel>,
     }
 
     #[derive(Debug, Clone, Copy, AsExpression, PartialEq, Eq)]

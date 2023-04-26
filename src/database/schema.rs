@@ -7,7 +7,6 @@ diesel::table! {
         nutritions -> Nullable<Binary>,
         date -> Date,
         time -> Time,
-
     }
 }
 
@@ -17,6 +16,6 @@ diesel::table! {
         name -> Text,
         height -> Integer,
         weight -> Integer,
-        activity -> Integer,
+        activity -> Nullable<Integer>,
     }
 }
