@@ -9,5 +9,5 @@ opt-level = 3
 [dependencies]
 anyhow = "1.0.70"
 chrono = "0.4.24"
-diesel = { version = "2.0.3", features = ["sqlite", "chrono"] }
+diesel = { version = "2.2.3", features = ["sqlite", "chrono"] }
 libsqlite3-sys = { version = "0.25.2", features = ["bundled"] }
